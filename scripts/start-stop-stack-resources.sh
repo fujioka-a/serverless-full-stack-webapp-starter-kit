@@ -52,7 +52,10 @@ aws_ec2() {
 
 readarray_safe() {
   local query="$1"
-  mapfile -t RESULT < <(aws_cf list-stack-resources --query "$query" --output text | tr '\t' '\n' | sed '/^None$/d;/^$/d')
+  RESULT=()
+  while IFS= read -r line; do
+    RESULT+=("$line")
+  done < <(aws_cf list-stack-resources --query "$query" --output text | tr '\t' '\n' | sed '/^None$/d;/^$/d')
 }
 
 print_section() {

@@ -422,6 +422,11 @@ exports[`Snapshot test 2`] = `
         "Ref": "WebappMigrationRunnerAC67C012",
       },
     },
+    "ResourceLifecycleSchedulerDailyStopSchedulerFunctionNameD17E8EF2": {
+      "Value": {
+        "Ref": "ResourceLifecycleSchedulerHandlerF430936E",
+      },
+    },
   },
   "Parameters": {
     "BootstrapVersion": {
@@ -1082,7 +1087,7 @@ exports[`Snapshot test 2`] = `
           ],
         },
         "AdminCreateUserConfig": {
-          "AllowAdminCreateUserOnly": true,
+          "AllowAdminCreateUserOnly": false,
         },
         "AutoVerifiedAttributes": [
           "email",
@@ -2291,6 +2296,147 @@ exports[`Snapshot test 2`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "ResourceLifecycleSchedulerDailyStopSchedule5577D2CE": {
+      "Properties": {
+        "Description": "Checks the stack resources every morning and stops running Aurora clusters and EC2 instances.",
+        "FlexibleTimeWindow": {
+          "Mode": "OFF",
+        },
+        "ScheduleExpression": "cron(0 6 * * ? *)",
+        "ScheduleExpressionTimezone": "Asia/Tokyo",
+        "State": "ENABLED",
+        "Target": {
+          "Arn": {
+            "Fn::GetAtt": [
+              "ResourceLifecycleSchedulerHandlerF430936E",
+              "Arn",
+            ],
+          },
+          "RetryPolicy": {
+            "MaximumEventAgeInSeconds": 86400,
+            "MaximumRetryAttempts": 3,
+          },
+          "RoleArn": {
+            "Fn::GetAtt": [
+              "SchedulerRoleForTarget6ef534EE60490D",
+              "Arn",
+            ],
+          },
+        },
+      },
+      "Type": "AWS::Scheduler::Schedule",
+    },
+    "ResourceLifecycleSchedulerHandlerF430936E": {
+      "DependsOn": [
+        "ResourceLifecycleSchedulerHandlerServiceRoleDefaultPolicy957C05AD",
+        "ResourceLifecycleSchedulerHandlerServiceRole6AB45494",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-west-2",
+          "S3Key": "REDACTED",
+        },
+        "Environment": {
+          "Variables": {
+            "STACK_NAME": "ServerlessWebappStarterKitStack",
+          },
+        },
+        "Handler": "index.handler",
+        "LoggingConfig": {
+          "LogGroup": {
+            "Ref": "ResourceLifecycleSchedulerHandlerLogs7CA40B25",
+          },
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "ResourceLifecycleSchedulerHandlerServiceRole6AB45494",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs22.x",
+        "Timeout": 300,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "ResourceLifecycleSchedulerHandlerLogs7CA40B25": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "RetentionInDays": 7,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "ResourceLifecycleSchedulerHandlerServiceRole6AB45494": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "ResourceLifecycleSchedulerHandlerServiceRoleDefaultPolicy957C05AD": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "cloudformation:ListStackResources",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "rds:DescribeDBClusters",
+                "rds:StopDBCluster",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "ec2:DescribeInstances",
+                "ec2:StopInstances",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "ResourceLifecycleSchedulerHandlerServiceRoleDefaultPolicy957C05AD",
+        "Roles": [
+          {
+            "Ref": "ResourceLifecycleSchedulerHandlerServiceRole6AB45494",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "SchedulerRoleForTarget44ece2CFC6840F": {
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -2366,6 +2512,82 @@ exports[`Snapshot test 2`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "SchedulerRoleForTarget6ef534DefaultPolicyA65077C6": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "ResourceLifecycleSchedulerHandlerF430936E",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "ResourceLifecycleSchedulerHandlerF430936E",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "SchedulerRoleForTarget6ef534DefaultPolicyA65077C6",
+        "Roles": [
+          {
+            "Ref": "SchedulerRoleForTarget6ef534EE60490D",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "SchedulerRoleForTarget6ef534EE60490D": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceAccount": "123456789012",
+                  "aws:SourceArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":scheduler:us-west-2:123456789012:schedule-group/default",
+                      ],
+                    ],
+                  },
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "scheduler.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
     },
     "Vpc8378EB38": {
       "Properties": {

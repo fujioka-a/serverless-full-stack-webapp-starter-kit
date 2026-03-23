@@ -10,6 +10,7 @@ import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager';
 import { Webapp } from './constructs/webapp';
 import { EdgeFunction } from './constructs/cf-lambda-furl-service/edge-function';
 import { EventBus } from './constructs/event-bus/';
+import { ResourceLifecycleScheduler } from './constructs/resource-lifecycle-scheduler';
 
 interface MainStackProps extends StackProps {
   readonly signPayloadHandler: EdgeFunction;
@@ -118,6 +119,10 @@ export class MainStack extends Stack {
       eventBus,
       asyncJob,
       subDomain: 'web',
+    });
+
+    new ResourceLifecycleScheduler(this, 'ResourceLifecycleScheduler', {
+      stackName: Stack.of(this).stackName,
     });
 
     new CfnOutput(this, 'FrontendDomainName', {
