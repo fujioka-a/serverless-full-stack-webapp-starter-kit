@@ -69,9 +69,8 @@ export class Auth extends Construct {
         requireDigits: true,
         minLength: 8,
       },
-      // Set to true to allow self sign-up.
-      // When false, administrators must create users via the Cognito console or API.
-      selfSignUpEnabled: false,
+      // Enable Cognito managed self sign-up so the app can expose a public sign-up entry point.
+      selfSignUpEnabled: true,
       signInAliases: {
         username: false,
         email: true,
