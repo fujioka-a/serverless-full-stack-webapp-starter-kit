@@ -2,77 +2,85 @@
 [![Build](https://github.com/aws-samples/serverless-full-stack-webapp-starter-kit/actions/workflows/build.yml/badge.svg)](https://github.com/aws-samples/serverless-full-stack-webapp-starter-kit/actions/workflows/build.yml)
 [![Release](https://img.shields.io/github/v/release/aws-samples/serverless-full-stack-webapp-starter-kit)](https://github.com/aws-samples/serverless-full-stack-webapp-starter-kit/releases)
 
-A serverless full-stack web app template you **copy and grow into your own app**. Not a framework — you own every file.
+このリポジトリは、サーバーレスなフルスタック Web アプリを素早く立ち上げるためのスターターキットです。フレームワークではなく、ファイル一式をそのまま自分のアプリ用にコピーして育てていく前提の構成になっています。
 
-Copy, deploy with a single command, then replace the sample todo app with your own features.
+サンプルアプリをそのままデプロイして動かし、その後で自分のユースケースに合わせて置き換えていく使い方を想定しています。
 
-## What you get
+## このスターターキットで得られるもの
 
-1. **Working sample app** — A todo app with authentication, DB CRUD, async jobs, and real-time notifications wired end-to-end. Designed as a readable reference for AI coding agents and humans alike.
-2. **End-to-end type safety** — Types flow from Prisma ORM through Zod schemas and Server Actions to React components in a single chain.
-3. **Serverless from day one** — Fully serverless architecture starting under $10/month that scales without operational overhead.
-4. **Integrated DB migration** — Schema migration is integrated into the CDK deploy process via CDK Trigger, providing a development-to-production path out of the box.
+1. **動くサンプルアプリ**  
+   認証、DB CRUD、非同期ジョブ、リアルタイム通知まで一通り揃った Todo アプリが入っています。AI コーディングエージェントにも人間にも読みやすい、参照実装として作られています。
+2. **エンドツーエンドの型安全**  
+   Prisma ORM、Zod、Server Actions、React コンポーネントのあいだで型が一貫して流れます。
+3. **最初からサーバーレス**  
+   月額 10 USD 未満から始めやすく、運用負荷を抑えながらスケールできます。
+4. **デプロイに統合された DB マイグレーション**  
+   CDK Trigger によって、CDK デプロイの中でスキーマ反映まで完結します。
 
-You can refer to [the blog article](https://tmokmss.github.io/blog/posts/serverless-fullstack-webapp-architecture-2025/) for more details (also [Japanese version](https://tmokmss.hatenablog.com/entry/serverless-fullstack-webapp-architecture-2025)).
+詳しい背景は、以下の記事にまとまっています。
 
-## Sample app
+- 英語版: [the blog article](https://tmokmss.github.io/blog/posts/serverless-fullstack-webapp-architecture-2025/)
+- 日本語版: [AWSの安価でスケーラブルなウェブアプリ構成 2025年度版](https://tmokmss.hatenablog.com/entry/serverless-fullstack-webapp-architecture-2025)
 
-The kit includes a simple todo app to demonstrate how all components work together.
+## サンプルアプリ
+
+このキットには、全体構成を確認するためのシンプルな Todo アプリが含まれています。
 
 <img align="left" width="300" src="./.serverless-full-stack-webapp-starter-kit/docs/imgs/signin.png">
-Sign in/up page redirects to Cognito Managed Login.
+サインイン / サインアップ画面は Cognito Managed Login にリダイレクトされます。
 <br clear="left"/>
 
 &nbsp;
 
 <img align="left" width="300" src="./.serverless-full-stack-webapp-starter-kit/docs/imgs/top.png">
-After login, you can add, delete, and manage your todo items. The translate button triggers an async job and pushes a real-time notification to refresh the page.
+ログイン後は Todo の追加・削除・更新ができます。翻訳ボタンは非同期ジョブを起動し、リアルタイム通知で画面更新を促します。
 <br clear="left"/>
 
-## Architecture
+## アーキテクチャ
 
 ![architecture](./.serverless-full-stack-webapp-starter-kit/docs/imgs/architecture.png)
 
-| Service | Role |
+| サービス | 役割 |
 |---------|------|
-| [Aurora PostgreSQL Serverless v2](https://aws.amazon.com/rds/aurora/serverless/) | Relational database with Prisma ORM |
-| [Next.js App Router](https://nextjs.org/docs/app) on [Lambda](https://aws.amazon.com/lambda/) | Unified frontend and backend |
-| [CloudFront](https://aws.amazon.com/cloudfront/) + Lambda Function URL | Content delivery with response streaming |
-| [Cognito](https://aws.amazon.com/cognito/) | Authentication (email by default, OIDC federation supported) |
-| [AppSync Events](https://docs.aws.amazon.com/appsync/latest/eventapi/event-api-welcome.html) + Lambda | Async jobs and real-time notifications |
-| [EventBridge](https://aws.amazon.com/eventbridge/) | Scheduled jobs |
-| [CloudWatch](https://aws.amazon.com/cloudwatch/) + S3 | Access logging |
+| [Aurora PostgreSQL Serverless v2](https://aws.amazon.com/rds/aurora/serverless/) | Prisma ORM から使う RDB |
+| [Next.js App Router](https://nextjs.org/docs/app) on [Lambda](https://aws.amazon.com/lambda/) | フロントエンドとバックエンドを同居 |
+| [CloudFront](https://aws.amazon.com/cloudfront/) + Lambda Function URL | 配信とレスポンスストリーミング |
+| [Cognito](https://aws.amazon.com/cognito/) | 認証基盤 |
+| [AppSync Events](https://docs.aws.amazon.com/appsync/latest/eventapi/event-api-welcome.html) + Lambda | 非同期ジョブとリアルタイム通知 |
+| [EventBridge](https://aws.amazon.com/eventbridge/) | スケジュールジョブ |
+| [CloudWatch](https://aws.amazon.com/cloudwatch/) + S3 | アクセスログと各種ログ保管 |
 | [CDK](https://aws.amazon.com/cdk/) | Infrastructure as Code |
 
-Fully serverless — high cost efficiency, scalability, and minimal operational overhead.
+全体としてサーバーレス中心の構成で、コスト効率、スケーラビリティ、運用の軽さを重視しています。
 
-## Getting started
+## はじめかた
 
-Prerequisites:
+前提条件:
+
 * [Node.js](https://nodejs.org/) (>= v20)
 * [Docker](https://docs.docker.com/get-docker/)
-* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) with a configured IAM profile
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) と、設定済みの IAM プロファイル
 
-### 1. Copy the kit
+### 1. キットをコピーする
 
-Use the GitHub template ("Use this template" button) or clone and copy:
+GitHub の template 機能を使うか、clone してコピーします。
 
 ```sh
 git clone https://github.com/aws-samples/serverless-full-stack-webapp-starter-kit.git my-app
 cd my-app
 rm -rf .git && git init
-# Record the kit version in your initial commit for future reference
+# どのバージョンのキットから始めたか分かるよう、最初のコミットに残しておくと後で便利です
 git add -A && git commit -m "Initial commit from serverless-full-stack-webapp-starter-kit vX.Y.Z"
 ```
 
-### 2. Customize (optional)
+### 2. 必要に応じて初期設定を変える
 
-- Update the application name (stack name, tags) in [`cdk/bin/cdk.ts`](cdk/bin/cdk.ts)
-- Set a custom domain in `cdk/bin/cdk.ts`
-- Remove `cdk.context.json` from `cdk/.gitignore` and commit it (recommended for your own project)
-- Switch from `prisma db push` to `prisma migrate` if you need migration history
+- アプリケーション名や stack name、タグを [`cdk/bin/cdk.ts`](./cdk/bin/cdk.ts) で変更する
+- カスタムドメインを使う場合は [`cdk/bin/cdk.ts`](./cdk/bin/cdk.ts) で設定する
+- `cdk.context.json` を `cdk/.gitignore` から外して commit することを検討する
+- migration 履歴を明示管理したいなら `prisma db push` から `prisma migrate` へ切り替える
 
-### 3. Deploy
+### 3. デプロイする
 
 ```sh
 cd cdk
@@ -81,9 +89,9 @@ npx cdk bootstrap
 npx cdk deploy --all
 ```
 
-Initial deployment takes about 20 minutes. After success, you'll see:
+初回デプロイにはおおよそ 20 分ほどかかります。成功すると、以下のような出力が表示されます。
 
-```
+```txt
  ✅  ServerlessWebappStarterKitStack
 
 Outputs:
@@ -92,39 +100,58 @@ ServerlessWebappStarterKitStack.DatabaseSecretsCommand = aws secretsmanager get-
 ServerlessWebappStarterKitStack.DatabasePortForwardCommand = aws ssm start-session ...
 ```
 
-Open the `FrontendDomainName` URL to try the sample app.
+`FrontendDomainName` に表示された URL を開くと、サンプルアプリを試せます。
 
-> **Note:** `DatabasePortForwardCommand` establishes a local connection to your RDS database, and `DatabaseSecretsCommand` retrieves database credentials from Secrets Manager.
+`DatabasePortForwardCommand` は RDS へのローカルポートフォワードを開始するためのコマンドで、`DatabaseSecretsCommand` は Secrets Manager から DB 接続情報を取得するためのコマンドです。
 
-### 4. Add your own features
+### 手動で DB 接続する
 
-See [`AGENTS.md`](./AGENTS.md) for development guide — local development setup, authentication patterns, async job setup, DB migration, and coding conventions.
+デプロイ後に DB の中身を直接確認したい場合は、以下の流れで接続できます。
 
-To add social sign-in (Google, Facebook, etc.), see [Add social sign-in to a user pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-configuring-federation-with-social-idp.html).
+```sh
+# 1. CDK 出力の DatabasePortForwardCommand を使ってポートフォワードを開始
+aws ssm start-session --region <region> --target <instance-id> \
+  --document-name AWS-StartPortForwardingSessionToRemoteHost \
+  --parameters '{"portNumber":["5432"], "localPortNumber":["5433"], "host": ["<cluster-endpoint>"]}'
 
-## Maintenance policy
+# 2. 別ターミナルで、CDK 出力の DatabaseSecretsCommand を使って認証情報を取得
+aws secretsmanager get-secret-value --secret-id <secret-name> --region <region>
 
-This kit follows [Semantic Versioning](https://semver.org/). Since users copy (not fork) this kit, breaking changes are introduced as new major versions without a lengthy deprecation cycle.
+# 3. 取得したユーザー名・パスワードで接続
+psql "postgresql://<username>:<password>@localhost:5433/main"
+```
 
-## Cost
+上のプレースホルダーを置き換える代わりに、CDK の出力に表示された `DatabasePortForwardCommand` と `DatabaseSecretsCommand` をそのまま使っても構いません。
 
-Sample cost breakdown for us-east-1, one month, with cost-optimized configuration:
+### 4. 自分の機能を追加する
 
-| Service | Usage Details | Monthly Cost [USD] |
-|---------|--------------|-------------------|
-| Aurora Serverless v2 | 0.5 ACU × 2 hour/day, 1GB storage | 3.6 |
+ローカル開発環境、認証パターン、非同期ジョブの追加方法、DB スキーマ更新、コーディング規約は [`AGENTS.md`](./AGENTS.md) を参照してください。
+
+Google や Facebook などのソーシャルログインを追加したい場合は、[Add social sign-in to a user pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-configuring-federation-with-social-idp.html) を参照してください。
+
+## メンテナンスポリシー
+
+このキットは [Semantic Versioning](https://semver.org/) に従います。利用者は fork ではなく copy して使う前提のため、破壊的変更は長い非推奨期間を設けず、メジャーバージョン更新として導入されます。
+
+## コスト
+
+`us-east-1` における、コスト最適化寄りの設定での月額試算例です。
+
+| サービス | 想定利用量 | 月額 [USD] |
+|---------|-----------|-----------|
+| Aurora Serverless v2 | 0.5 ACU × 2 時間/日、1GB ストレージ | 3.6 |
 | Cognito | 100 MAU | 1.5 |
-| AppSync Events | 100 events/month, 10 hours connection/user/month | 0.02 |
+| AppSync Events | 月 100 イベント、ユーザーあたり月 10 時間接続 | 0.02 |
 | Lambda | 1024MB × 200ms/request | 0.15 |
 | Lambda@Edge | 128MB × 50ms/request | 0.09 |
 | VPC | NAT Instance (t4g.nano) × 1 | 3.02 |
 | EventBridge | Scheduler 100 jobs/month | 0.0001 |
-| CloudFront | Data transfer 1kB/request | 0.01 |
-| **Total** | | **8.49** |
+| CloudFront | 1kB/request のデータ転送 | 0.01 |
+| **合計** | | **8.49** |
 
-Assumes 100 users/month, 1000 requests/user. Costs could be further reduced with [Free Tier](https://aws.amazon.com/free/).
+月 100 ユーザー、1 ユーザーあたり 1000 リクエストを前提にした概算です。ユースケース次第で増減します。さらに [Free Tier](https://aws.amazon.com/free/) の範囲に収まる部分もあります。
 
-## Clean up
+## 削除
 
 ```sh
 cd cdk
@@ -140,12 +167,14 @@ npx cdk destroy --force
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+貢献ルールは [CONTRIBUTING.md](./CONTRIBUTING.md) を参照してください。
 
-Contributors (human and AI) **must** read [`.serverless-full-stack-webapp-starter-kit/design/DESIGN_PRINCIPLES.md`](./.serverless-full-stack-webapp-starter-kit/design/DESIGN_PRINCIPLES.md) before making changes. It defines the design decisions and constraints that govern this kit.
+人間・AI を問わず、変更前に [`.serverless-full-stack-webapp-starter-kit/design/DESIGN_PRINCIPLES.md`](./.serverless-full-stack-webapp-starter-kit/design/DESIGN_PRINCIPLES.md) を読む前提です。このファイルには、このキットの設計判断と制約がまとめられています。
 
 ## Security
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+
+セキュリティに関する案内は [CONTRIBUTING.md](./CONTRIBUTING.md#security-issue-notifications) を参照してください。
 
 ## License
-This library is licensed under the MIT-0 License. See the LICENSE file.
+
+このライブラリは MIT-0 License で提供されています。詳細は [`LICENSE`](./LICENSE) を参照してください。

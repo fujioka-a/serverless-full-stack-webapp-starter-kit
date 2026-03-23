@@ -59,7 +59,7 @@ export interface CloudFrontLambdaFunctionUrlServiceProps {
    */
   certificate?: ICertificate;
   signPayloadHandler: EdgeFunction;
-  accessLogBucket: Bucket;
+  accessLogBucket?: Bucket;
 }
 
 export class CloudFrontLambdaFunctionUrlService extends Construct {
@@ -134,8 +134,12 @@ export class CloudFrontLambdaFunctionUrlService extends Construct {
         ],
       },
       // errorResponses: [{ httpStatus: 404, responsePagePath: '/', responseHttpStatus: 200 }],
-      logBucket: accessLogBucket,
-      logFilePrefix: `${serviceName}/`,
+      ...(accessLogBucket
+        ? {
+            logBucket: accessLogBucket,
+            logFilePrefix: `${serviceName}/`,
+          }
+        : {}),
 
       ...(hostedZone ? { certificate: certificate, domainNames: [domainName] } : {}),
 

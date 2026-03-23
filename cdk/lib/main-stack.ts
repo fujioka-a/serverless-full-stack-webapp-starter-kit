@@ -33,13 +33,20 @@ interface MainStackProps extends StackProps {
    * @default true
    */
   readonly useNatInstance?: boolean;
+
+  /**
+   * Enable CloudFront access logging to S3.
+   *
+   * @default true
+   */
+  readonly enableCloudFrontAccessLogs?: boolean;
 }
 
 export class MainStack extends Stack {
   constructor(scope: Construct, id: string, props: MainStackProps) {
     super(scope, id, { description: 'Serverless fullstack webapp stack (uksb-1tupboc47)', ...props });
 
-    const { useNatInstance = true } = props;
+    const { useNatInstance = true, enableCloudFrontAccessLogs = true } = props;
 
     const hostedZone = props.domainName
       ? HostedZone.fromLookup(this, 'HostedZone', {
@@ -47,14 +54,16 @@ export class MainStack extends Stack {
         })
       : undefined;
 
-    const accessLogBucket = new Bucket(this, 'AccessLogBucket', {
-      encryption: BucketEncryption.S3_MANAGED,
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      enforceSSL: true,
-      removalPolicy: RemovalPolicy.DESTROY,
-      objectOwnership: ObjectOwnership.OBJECT_WRITER,
-      autoDeleteObjects: true,
-    });
+    const accessLogBucket = enableCloudFrontAccessLogs
+      ? new Bucket(this, 'AccessLogBucket', {
+          encryption: BucketEncryption.S3_MANAGED,
+          blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+          enforceSSL: true,
+          removalPolicy: RemovalPolicy.DESTROY,
+          objectOwnership: ObjectOwnership.OBJECT_WRITER,
+          autoDeleteObjects: true,
+        })
+      : undefined;
 
     // Custom user data for NAT instance to support Amazon Linux 2023.
     // CDK's default user data uses `route` command which requires net-tools package,

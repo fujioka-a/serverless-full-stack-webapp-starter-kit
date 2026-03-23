@@ -24,12 +24,21 @@ interface EnvironmentProps {
    * @default true
    */
   useNatInstance?: boolean;
+
+  /**
+   * Enable CloudFront access logging to S3.
+   * Set ENABLE_CLOUDFRONT_ACCESS_LOGS=false to disable it for low-cost PoC environments.
+   *
+   * @default true
+   */
+  enableCloudFrontAccessLogs?: boolean;
 }
 
 const props: EnvironmentProps = {
   account: process.env.CDK_DEFAULT_ACCOUNT!,
   // domainName: 'FIXME.example.com',
   useNatInstance: true,
+  enableCloudFrontAccessLogs: process.env.ENABLE_CLOUDFRONT_ACCESS_LOGS !== 'false',
 };
 
 const virginia = new UsEast1Stack(app, 'ServerlessWebappStarterKitUsEast1Stack', {
@@ -49,6 +58,7 @@ new MainStack(app, 'ServerlessWebappStarterKitStack', {
   sharedCertificate: virginia.certificate,
   domainName: props.domainName,
   useNatInstance: props.useNatInstance,
+  enableCloudFrontAccessLogs: props.enableCloudFrontAccessLogs,
   signPayloadHandler: virginia.signPayloadHandler,
 });
 

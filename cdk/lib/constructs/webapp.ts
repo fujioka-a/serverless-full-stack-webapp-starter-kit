@@ -22,7 +22,7 @@ import { AwsCustomResource, AwsCustomResourcePolicy, PhysicalResourceId } from '
 export interface WebappProps {
   database: Database;
   signPayloadHandler: EdgeFunction;
-  accessLogBucket: Bucket;
+  accessLogBucket?: Bucket;
   auth: Auth;
   eventBus: EventBus;
   asyncJob: AsyncJob;
