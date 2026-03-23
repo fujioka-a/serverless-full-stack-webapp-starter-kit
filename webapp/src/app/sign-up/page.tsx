@@ -9,9 +9,7 @@ export default function SignUpPage() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div className="flex flex-col items-center">
-            <p className="mb-6 text-center text-sm text-gray-600">
-              Create your Cognito account to access the Todo app
-            </p>
+            <p className="mb-6 text-center text-sm text-gray-600">Create your Cognito account to access the Todo app</p>
 
             {/* Use <a> instead of <Link> to trigger a full-page navigation.
                 The sign-up route returns a 302 redirect to Cognito, which
