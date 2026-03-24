@@ -4,22 +4,28 @@
 # Use Node.js 22.x (the repository root has .nvmrc)
 nvm use
 
-# Run this command in the repository root
+# Run these commands in the webapp directory
+cd webapp
+npm ci
+
+# Return to the repository root
+cd ..
+
+# Start local PostgreSQL and sync the Prisma schema
 docker compose up -d
 scripts/setup-local-db.sh
 
 # Generate webapp/.env.local from deployed stack outputs
 scripts/setup-local-webapp-env.sh ServerlessWebappStarterKitStack us-west-2
 
-# Run these commands in the webapp directory
+# Start the app
 cd webapp
-npm ci
-npx prisma db push
 npm run dev
 ```
 
 Open [http://localhost:3010](http://localhost:3010) with your browser to see the result.
 Local PostgreSQL is exposed on `127.0.0.1:5433` to avoid conflicts with existing SSH/RDS port-forward sessions on `5432`.
+`scripts/setup-local-db.sh` tries `prisma db push` first and falls back to recreating the local `public` schema from `prisma/schema.prisma` if Prisma's schema engine fails. The fallback resets local tables.
 
 ## Environment variables
 
