@@ -7,6 +7,7 @@ if (process.env.ALLOWED_ORIGIN_HOST) {
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  distDir: process.env.NEXT_DIST_DIR ?? '.next',
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,

@@ -10,13 +10,13 @@ export default defineConfig({
   retries: 0,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:3010',
+    baseURL: 'http://127.0.0.1:3011',
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'npx next dev --turbopack --hostname 127.0.0.1 -p 3010',
-    url: 'http://127.0.0.1:3010',
-    reuseExistingServer: true,
+    command: 'NEXT_DIST_DIR=.next-e2e npx next dev --turbopack --hostname 127.0.0.1 -p 3011',
+    url: 'http://127.0.0.1:3011',
+    reuseExistingServer: false,
     env: {
       ...process.env,
       APP_ENV: 'local',

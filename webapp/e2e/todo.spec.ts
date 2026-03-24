@@ -30,11 +30,13 @@ test('can create, complete, and delete a todo item', async ({ page }) => {
 
   await expect(page.getByText('Playwright smoke test')).toBeVisible();
   await expect(page.getByRole('heading', { name: /Pending Tasks \(1\)/ })).toBeVisible();
+  await expect(page.getByRole('checkbox', { name: 'Toggle todo status for Playwright smoke test' })).toBeEnabled();
 
-  await page.getByRole('checkbox', { name: 'Toggle todo status for Playwright smoke test' }).check();
+  await page.getByRole('checkbox', { name: 'Toggle todo status for Playwright smoke test' }).click();
   await expect(page.getByRole('heading', { name: /Completed Tasks \(1\)/ })).toBeVisible();
 
   page.on('dialog', (dialog) => dialog.accept());
+  await expect(page.getByRole('button', { name: 'Delete' })).toBeEnabled();
   await page.getByTestId('todo-item').getByText('Delete').click();
 
   await expect(page.getByRole('heading', { name: /Completed Tasks \(0\)/ })).toBeVisible();

@@ -49,6 +49,7 @@ npm run test:e2e
 ```
 
 The E2E suite starts the local Next.js server automatically, uses a development-only auth bypass, disables AppSync Events, and exercises `create -> complete -> delete` on a local todo item. The bypass is enabled only when both `APP_ENV=local` and `E2E_AUTH_BYPASS=true` are set. `scripts/setup-local-webapp-env.sh` writes `APP_ENV=local` into `.env.local`, and production builds do not satisfy this condition.
+The E2E server uses `http://127.0.0.1:3011` and a dedicated `.next-e2e` build directory so it does not reuse a normal `npm run dev` instance on port `3010`.
 
 ## Environment variables
 
