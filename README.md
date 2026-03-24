@@ -57,7 +57,7 @@
 
 前提条件:
 
-* [Node.js](https://nodejs.org/) (>= v20)
+* [Node.js](https://nodejs.org/) (22.x recommended; CI uses 22.x)
 * [Docker](https://docs.docker.com/get-docker/)
 * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) と、設定済みの IAM プロファイル
 

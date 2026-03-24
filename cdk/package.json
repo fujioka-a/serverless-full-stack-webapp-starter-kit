@@ -2,6 +2,9 @@
   "name": "@aws-samples/serverless-fullstack-webapp-starter-kit",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22 <23"
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",

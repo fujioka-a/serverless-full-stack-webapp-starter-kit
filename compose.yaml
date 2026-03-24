@@ -9,6 +9,7 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: root
+      POSTGRES_DB: sample
 volumes:
   mysql_data:
   postgres_data:
