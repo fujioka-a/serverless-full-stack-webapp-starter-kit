@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { fetchAuthSession } from 'aws-amplify/auth/server';
 import { runWithAmplifyServerContext } from '@/lib/amplifyServerUtils';
 import { prisma } from '@/lib/prisma';
+import { getDevAuthSession, isDevAuthBypassEnabled } from '@/lib/dev-auth';
 
 /**
  * Get the authenticated session without DB access.
@@ -10,6 +11,10 @@ import { prisma } from '@/lib/prisma';
  * Memoized per request via React cache().
  */
 export const getAuthSession = cache(async () => {
+  if (isDevAuthBypassEnabled()) {
+    return getDevAuthSession();
+  }
+
   const session = await runWithAmplifyServerContext({
     nextServerContext: { cookies },
     operation: (contextSpec) => fetchAuthSession(contextSpec),
@@ -46,7 +51,13 @@ export async function tryGetAuthSession() {
  */
 export const getSessionWithUser = cache(async () => {
   const auth = await getAuthSession();
-  const user = await prisma.user.findUnique({ where: { id: auth.userId } });
+  const user = isDevAuthBypassEnabled()
+    ? await prisma.user.upsert({
+        where: { id: auth.userId },
+        update: {},
+        create: { id: auth.userId },
+      })
+    : await prisma.user.findUnique({ where: { id: auth.userId } });
   if (user == null) {
     throw new UserNotFoundError(auth.userId);
   }

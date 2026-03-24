@@ -138,12 +138,14 @@ export default function TodoItemComponent({ todo }: TodoItemProps) {
 
   return (
     <div
+      data-testid="todo-item"
       className={`border p-4 rounded-md shadow-sm mb-4 ${todo.status === TodoItemStatus.COMPLETED ? 'bg-gray-50' : 'bg-white'}`}
     >
       <div className="flex items-start justify-between">
         <div className="flex items-center">
           <input
             type="checkbox"
+            aria-label={`Toggle todo status for ${todo.title}`}
             checked={todo.status === TodoItemStatus.COMPLETED}
             onChange={toggleStatus}
             disabled={statusStatus === 'executing'}
@@ -166,6 +168,7 @@ export default function TodoItemComponent({ todo }: TodoItemProps) {
         <div className="flex space-x-2">
           <button
             onClick={() => setIsEditing(true)}
+            data-testid={`edit-todo-${todo.id}`}
             disabled={deleteStatus === 'executing' || statusStatus === 'executing' || translateStatus === 'executing'}
             className="text-indigo-600 hover:text-indigo-900 disabled:opacity-50"
           >
@@ -173,6 +176,7 @@ export default function TodoItemComponent({ todo }: TodoItemProps) {
           </button>
           <button
             onClick={handleDelete}
+            data-testid={`delete-todo-${todo.id}`}
             disabled={deleteStatus === 'executing' || statusStatus === 'executing' || translateStatus === 'executing'}
             className="text-red-600 hover:text-red-900 disabled:opacity-50"
           >

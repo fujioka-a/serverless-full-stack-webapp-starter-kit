@@ -11,7 +11,9 @@
     "format": "prettier --write './**/*.{ts,tsx,mjs,mts}' && npx prisma format",
     "format:check": "prettier --check './**/*.{ts,tsx,mjs,mts}' && npx prisma format --check",
     "start": "next start",
-    "lint": "eslint . --max-warnings=0"
+    "lint": "eslint . --max-warnings=0",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed"
   },
   "dependencies": {
     "@aws-amplify/adapter-nextjs": "^1.7.1",
@@ -38,6 +40,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

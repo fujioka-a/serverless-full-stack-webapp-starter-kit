@@ -49,6 +49,7 @@ export default function CreateTodoForm(props: { userId: string }) {
       <div className="mb-6">
         <button
           onClick={() => setIsFormOpen(true)}
+          data-testid="open-create-todo"
           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           + Add New Todo
@@ -68,6 +69,7 @@ export default function CreateTodoForm(props: { userId: string }) {
           <input
             id="title"
             {...register('title')}
+            data-testid="todo-title-input"
             placeholder="Your TODO item title."
             className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
           />
@@ -81,6 +83,7 @@ export default function CreateTodoForm(props: { userId: string }) {
           <textarea
             id="description"
             {...register('description')}
+            data-testid="todo-description-input"
             rows={3}
             placeholder="Describe your TODO item."
             className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
@@ -101,6 +104,7 @@ export default function CreateTodoForm(props: { userId: string }) {
           <button
             type="submit"
             disabled={action.isExecuting}
+            data-testid="submit-create-todo"
             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             {action.isExecuting ? 'Creating...' : 'Create Todo'}
